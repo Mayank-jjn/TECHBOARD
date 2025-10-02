@@ -56,22 +56,22 @@ function Team() {
 
         <div
           className="
-    flex 
-    flex-wrap 
-    justify-center
-  "
+            flex 
+            flex-wrap 
+            justify-center
+          "
         >
           <NewProfileCard
-            name="Mohit Dhaka"
-            title="Software Engineer"
-            description="Passionate about coding and solving problems. Always learning!"
-            imageUrl="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
+            name="Shashank Tiwari"
+            title="Aspiring Backend Developer"
+            description="Cricket. Code. Solve. Compete."
+            imageUrl="Team/sec1.jpg"
           />
           <NewProfileCard
-            name="Mayank Dhaka"
-            title="Software Engineer"
-            description="Focused on web development and hackathons. Loves building products."
-            imageUrl="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
+            name="Sneha"
+            title="Tech-savvy"
+            description="Every function has a story, every novel has a logic."
+            imageUrl="Team/sec2.jpg"
           />
         </div>
       </section>
@@ -101,60 +101,60 @@ function Team() {
           "
         >
           <NewProfileCard
-            name="Mohit Dhaka"
-            title="Software Engineer"
-            description="Passionate about coding and solving problems. Always learning!"
-            imageUrl="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
+            name="Rishabh Chandel"
+            title="Full Stack Developer"
+            description="A versatile developer building complete applications, from UI to server logic."
+            imageUrl="Team/te1.jpg"
           />
 
           <NewProfileCard
-            name="Mayank Dhaka"
-            title="Software Engineer"
-            description="Focused on web development and hackathons. Loves building products."
-            imageUrl="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
+            name="Aditya Karki"
+            title="Full Stack Developer"
+            description="Engineering the scalable, high-performance logic and APIs that power modern applications."
+            imageUrl="Team/te2.jpg"
           />
 
           <NewProfileCard
-            name="Afridi"
-            title="Software Engineer"
-            description="Dedicated to DSA, competitive programming, and aiming for Google."
-            imageUrl="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg"
+            name="Shashank Tiwari"
+            title="Aspiring Backend Developer"
+            description="Cricket. Code. Solve. Compete."
+            imageUrl="Team/te3.jpg"
           />
 
           <NewProfileCard
-            name="Anuj Kumar Sharma"
-            title="Software Engineer"
-            description="Enjoys problem-solving, system design, and teamwork."
-            imageUrl="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg"
+            name="Bikash Kumar Sharma"
+            title="AI/ML Engineer"
+            description="Turning data into intelligence. From algorithms to insights."
+            imageUrl="Team/te4.jpg"
           />
 
           {/* Extra cards */}
           <NewProfileCard
-            name="Ravi Kumar"
-            title="Frontend Developer"
-            description="Creative designer and developer who loves UI/UX."
-            imageUrl="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
+            name="Mayank Dhaka"
+            title="Aspiring Software Developer"
+            description="Solving problems, optimizing logic, and thriving under constraints."
+            imageUrl="Team/se1.png"
           />
 
           <NewProfileCard
-            name="Simran Kaur"
-            title="Backend Developer"
-            description="Specializes in APIs, databases, and scalable systems."
-            imageUrl="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
+            name="Mohit Dhaka"
+            title="Aspiring Software Developer"
+            description="Problem Solving. Bridging the gap between real-world applications."
+            imageUrl="Team/se2.png"
           />
 
           <NewProfileCard
-            name="Priya Sharma"
-            title="Fullstack Developer"
-            description="Enjoys working on both frontend and backend with equal passion."
-            imageUrl="https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg"
+            name="Afridi"
+            title="Aspiring Software Developer"
+            description="Chess, CP, Problem Solving."
+            imageUrl="Team/se3.png"
           />
 
           <NewProfileCard
-            name="Rahul Mehta"
-            title="AI/ML Engineer"
-            description="Exploring machine learning and building intelligent applications."
-            imageUrl="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg"
+            name="Anuj Kumar Sharma"
+            title="Code-Blooded"
+            description="Chess, CP, Analytical thinking."
+            imageUrl="Team/se4.png"
           />
         </div>
       </section>
