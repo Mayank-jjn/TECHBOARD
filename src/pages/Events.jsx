@@ -278,6 +278,21 @@ const Events = () => {
     }
   };
 
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (element) {
+      const onWheel = (e) => {
+        if (e.deltaY === 0) return;
+        e.preventDefault();
+        element.scrollTo({
+          left: element.scrollLeft + e.deltaY * 2.5,
+        });
+      };
+      element.addEventListener("wheel", onWheel);
+      return () => element.removeEventListener("wheel", onWheel);
+    }
+  }, []);
+
   const calculatePath = useCallback(() => {
     if (!isDesktop || Object.keys(pinRefs.current).length < cases.length)
       return;
