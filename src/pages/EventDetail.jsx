@@ -176,14 +176,14 @@ const EventDetail = () => {
                   October 25, 2025, 8:00 PM IST
                 </p>
                 <p className="text-gray-400">
-                  <strong className="text-gray-200">Location:</strong> The Old
-                  Warehouse, Sector 7
+                  <strong className="text-gray-200">Location:</strong> 
+                    Army Instittute of Technology , Pune
                 </p>
-                <p className="text-gray-400">
+                {/* <p className="text-gray-400">
                   <strong className="text-gray-200">Rules of Engagement:</strong>{" "}
                   Trust no one. Bring your wits. Standard detective gear
                   permitted.
-                </p>
+                </p> */}
               </div>
 
               <div className="text-left mt-8 sm:mt-10">
