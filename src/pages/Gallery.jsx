@@ -6,179 +6,6 @@ import Loader from "../components/Loader.jsx";
 import AnimatedBackground from "../components/AnimatedBackground.jsx";
 import AOS from "aos";
 
-/* ------------------- Train Intro (desktop) ------------------- */
-const TrainIntro = ({ images, startRect, onDone, heroScale = 7 }) => {
-  const travel = 1500;
-  const heroPop = 520;
-  const streamStep = 150;
-  const buffer = 300;
-
-  const [fading, setFading] = useState(false);
-  const [isLive, setIsLive] = useState(false);
-
-  useEffect(() => {
-    let raf1 = 0, raf2 = 0;
-    raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => setIsLive(true));
-    });
-    return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-    };
-  }, []);
-
-  useEffect(() => {
-    const total = Math.max(travel + heroPop, (images.length - 1) * streamStep + travel) + buffer;
-    const tFade = setTimeout(() => setFading(true), total - 260);
-    const tDone = setTimeout(onDone, total);
-    return () => {
-      clearTimeout(tFade);
-      clearTimeout(tDone);
-    };
-  }, [images.length, onDone]);
-
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-  const thumbH = Math.round(Math.min(60, Math.max(44, vw * 0.07)));
-  const thumbW = Math.round((16 / 9) * thumbH);
-  const gap = Math.round(Math.min(16, Math.max(8, vw * 0.022)));
-  const totalW = images.length * thumbW + (images.length - 1) * gap;
-  const navStartX = (vw - totalW) / 2 + thumbW / 2;
-  const endY = vh - (thumbH + 30);
-  const startX = startRect.left + startRect.width / 2;
-  const startY = startRect.top + startRect.height / 2;
-  const centerX = vw / 2;
-  const centerY = vh / 2;
-
-  const clones = images.map((src, i) => {
-    const endX = navStartX + i * (thumbW + gap);
-    const spanX = endX - startX;
-    const arcHeight = Math.min(260, Math.max(120, Math.abs(spanX) * 0.55));
-    const cp1x = startX + spanX * 0.32;
-    const cp1y = startY - arcHeight;
-    const cp2x = startX + spanX * 0.72;
-    const cp2y = endY - arcHeight * 0.6;
-    const pathStr = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`;
-    return { src, delay: i * streamStep, pathStr, endX, endY, thumbW, thumbH };
-  });
-
-  const dx = centerX - (clones[0]?.endX ?? centerX);
-  const dy = centerY - (clones[0]?.endY ?? centerY);
-
-  return (
-    <>
-      <div className="transition-scrim" />
-      <div className={`train-overlay ${isLive ? "is-live" : ""} ${fading ? "fade-out" : ""}`} aria-hidden>
-        {clones.map((c, i) => (
-          <img
-            key={i}
-            src={c.src}
-            alt=""
-            draggable="false"
-            decoding="async"
-            width={c.thumbW}
-            height={c.thumbH}
-            fetchpriority="low"       /* keep train thumbs low priority */
-            className={`train-thumb ${i === 0 ? "train-thumb-hero" : ""}`}
-            style={{
-              width: `${c.thumbW}px`,
-              height: `${c.thumbH}px`,
-              "--path": `path('${c.pathStr}')`,
-              "--train-dur": `${travel}ms`,
-              "--delay": `${i === 0 ? 0 : c.delay}ms`,
-              ...(i === 0 ? { "--hero-pop-delay": `${travel + 100}ms` } : {}),
-              "--hero-dx": `${dx}px`,
-              "--hero-dy": `${dy}px`,
-              "--hero-scale": heroScale,
-            }}
-          />
-        ))}
-      </div>
-    </>
-  );
-};
-
-/* ------------------- Scatter Intro (mobile/reduced-motion) ------------------- */
-const ScatterIntro = ({ images, startRect, onDone }) => {
-  const dur = 1100;
-  const step = 120;
-  const buffer = 260;
-
-  const [fading, setFading] = useState(false);
-  const [isLive, setIsLive] = useState(false);
-
-  useEffect(() => {
-    let raf1 = 0, raf2 = 0;
-    raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => setIsLive(true));
-    });
-    return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-    };
-  }, []);
-
-  useEffect(() => {
-    const total = (images.length - 1) * step + dur + buffer;
-    const tFade = setTimeout(() => setFading(true), total - 240);
-    const tDone = setTimeout(onDone, total);
-    return () => {
-      clearTimeout(tFade);
-      clearTimeout(tDone);
-    };
-  }, [images.length, onDone]);
-
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-  const thumbH = Math.round(Math.min(60, Math.max(44, vw * 0.07)));
-  const thumbW = Math.round((16 / 9) * thumbH);
-  const gap = Math.round(Math.min(16, Math.max(8, vw * 0.022)));
-  const totalW = images.length * thumbW + (images.length - 1) * gap;
-  const navStartX = (vw - totalW) / 2 + thumbW / 2;
-  const endY = vh - (thumbH + 30);
-
-  const startX = startRect.left + startRect.width / 2;
-  const startY = startRect.top + startRect.height / 2;
-
-  const clones = images.map((src, i) => {
-    const endX = navStartX + i * (thumbW + gap);
-    const dx = endX - startX;
-    const dy = endY - startY;
-    return { src, dx, dy, delay: i * step, thumbW, thumbH };
-  });
-
-  return (
-    <>
-      <div className="transition-scrim" />
-      <div className={`train-overlay ${isLive ? "is-live" : ""} ${fading ? "fade-out" : ""}`} aria-hidden>
-        {clones.map((c, i) => (
-          <img
-            key={i}
-            src={c.src}
-            alt=""
-            draggable="false"
-            decoding="async"
-            width={c.thumbW}
-            height={c.thumbH}
-            fetchpriority="low"
-            className="scatter-thumb"
-            style={{
-              width: `${c.thumbW}px`,
-              height: `${c.thumbH}px`,
-              left: `${startX}px`,
-              top: `${startY}px`,
-              "--dx": `${c.dx}px`,
-              "--dy": `${c.dy}px`,
-              "--dur": `${dur}ms`,
-              "--delay": `${c.delay}ms`,
-            }}
-          />
-        ))}
-      </div>
-    </>
-  );
-};
-
 /* ------------------- Slider ------------------- */
 const ImageSlider = ({
   images,
@@ -252,7 +79,7 @@ const ImageSlider = ({
         <button
           className="edge-card left-edge"
           title={otherCards[0].title}
-          onClick={(e) => onLaunchOther(otherCards[0].id, e.currentTarget.getBoundingClientRect())}
+          onClick={() => onLaunchOther(otherCards[0].id)}
           style={{ backgroundImage: `url(${otherCards[0].images[0]})` }}
           aria-label={`Open ${otherCards[0].title}`}
         />
@@ -261,9 +88,7 @@ const ImageSlider = ({
         <button
           className="edge-card right-edge"
           title={otherCards[1].title}
-          onClick={(e) =>
-            onLaunchOther(otherCards[1].id, e.currentTarget.getBoundingClientRect())
-          }
+          onClick={() => onLaunchOther(otherCards[1].id)}
           style={{ backgroundImage: `url(${otherCards[1].images[0]})` }}
           aria-label={`Open ${otherCards[1].title}`}
         />
@@ -300,14 +125,14 @@ const ImageSlider = ({
             aria-selected={currentIndex === index}
             onClick={() => showSlide(index)}
           >
-        <img
-            className="thumbnail"
-            src={imgSrc}
-            alt={`Thumbnail ${index + 1}`}
-            loading="lazy"
-            decoding="async"
-            draggable="false"
-          />
+            <img
+              className="thumbnail"
+              src={imgSrc}
+              alt={`Thumbnail ${index + 1}`}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
           </button>
         ))}
       </nav>
@@ -315,11 +140,10 @@ const ImageSlider = ({
   );
 };
 
-/* ------------------- Gallery ------------------- */
+/* ------------------- Gallery (no intro animations) ------------------- */
 const Gallery = () => {
   const [selectedCardId, setSelectedCardId] = useState(null);
-  const [transitioning, setTransitioning] = useState(false);
-  const [overlay, setOverlay] = useState(null); // { id, images, rect, mode, wait, initialIndex }
+  const [transitioning] = useState(false); // kept for CSS compatibility, always false (no intro)
   const [sliderStartIndex, setSliderStartIndex] = useState(0);
 
   // Keep track of dynamic <link> preloads so we can clean them up
@@ -373,7 +197,7 @@ const Gallery = () => {
   const selectedCardData = cards.find((card) => card.id === selectedCardId);
   const otherCards = cards.filter((card) => card.id !== selectedCardId);
 
-  /* ---------- image preload helpers ---------- */
+  /* ---------- preload helpers ---------- */
   const preloadImage = (src, maxWaitMs = 900) =>
     new Promise((resolve) => {
       if (!src) return resolve();
@@ -410,75 +234,38 @@ const Gallery = () => {
     return link;
   };
 
+  const clearHeadLinks = () => {
+    headLinksRef.current.forEach((l) => l && l.remove());
+    headLinksRef.current = [];
+  };
+
   const installCardPreloads = (imgs, heroIdx = 0) => {
-    // Hero: preload high priority
-    const hero = imgs[heroIdx];
     const links = [];
-    links.push(addPreloadLink(hero, "preload", "image", "high"));
-    // Next two: prefetch low priority (don’t block hero)
+    const hero = imgs[heroIdx];
+    if (hero) links.push(addPreloadLink(hero, "preload", "image", "high"));
     if (imgs[heroIdx + 1]) links.push(addPreloadLink(imgs[heroIdx + 1], "prefetch", null, "low"));
     if (imgs[heroIdx + 2]) links.push(addPreloadLink(imgs[heroIdx + 2], "prefetch", null, "low"));
-    // store and return cleanup
     headLinksRef.current.push(...links.filter(Boolean));
-    return () => {
-      headLinksRef.current.forEach((l) => l && l.remove());
-      headLinksRef.current = [];
-    };
   };
 
-  const computeShouldUseTrain = () => {
-    if (typeof window === "undefined") return false;
-    const supportsPath =
-      (window.CSS && CSS.supports && CSS.supports("offset-path", 'path("M0,0 L1,1")')) ||
-      (window.CSS && CSS.supports && CSS.supports("offsetPath", 'path("M0,0 L1,1")'));
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    return Boolean(supportsPath) && !isMobile && !prefersReduced;
-  };
-
-  /* ---------- overlay flow ---------- */
-  const triggerOverlayTo = (id, rect, mode) => {
+  /* ---------- open/close handlers (instant) ---------- */
+  const openCardInstant = (id) => {
     const card = cards.find((c) => c.id === id);
     if (!card) return;
-    setTransitioning(true);
-    const imgs = card.images || [];
-    const heroIdx = 0; // change if you want a custom hero per card
-    const cleanup = installCardPreloads(imgs, heroIdx);
-    // Preload hero for instant first slide
-    const wait = preloadImage(imgs[heroIdx], 1500);
-    setOverlay({ id, images: imgs, rect, mode, wait, initialIndex: heroIdx, cleanup });
+    clearHeadLinks();
+    installCardPreloads(card.images, 0);
+    // Fire off a preload for the hero image, but don't wait for it
+    preloadImage(card.images[0], 1500);
+    setSliderStartIndex(0);
+    setSelectedCardId(id);
   };
 
-  const finishOverlay = () => {
-    const o = overlay;
-    if (!o) return;
-    const w = o.wait || Promise.resolve();
-    w.then(() => {
-      setSelectedCardId(o.id);
-      setSliderStartIndex(o.initialIndex ?? 0);
-      // remove link preloads
-      if (o.cleanup) o.cleanup();
-      setOverlay(null);
-      setTimeout(() => setTransitioning(false), 180);
-    });
+  const handleCardClick = (card) => {
+    openCardInstant(card.id);
   };
 
-  /* ---------- click handlers ---------- */
-  const handleCardClick = (card, event) => {
-    if (overlay) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const mode = computeShouldUseTrain() ? "train" : "scatter";
-    triggerOverlayTo(card.id, rect, mode);
-  };
-
-  const getEdgeClassFor = (card) => {
-    if (!overlay || overlay.id === card.id) return "";
-    const others = cards.filter((c) => c.id !== overlay.id);
-    const idx = others.findIndex((c) => c.id === card.id);
-    return idx === 0 ? "edge-card left-edge initial-circle" : "edge-card right-edge initial-circle";
-  };
-
-  const showInitial = !selectedCardId && !overlay;
+  /* ---------- initial view and loading ---------- */
+  const showInitial = !selectedCardId;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -488,6 +275,11 @@ const Gallery = () => {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Cleanup preloads on unmount
+  useEffect(() => {
+    return () => clearHeadLinks();
   }, []);
 
   if (loading) {
@@ -507,12 +299,10 @@ const Gallery = () => {
 
       <div className={`gallery-v2-container ${selectedCardId ? "gallery-v2-active" : ""}`}>
         {showInitial && (
-          <div className={`gallery-initial-view ${overlay ? "launching" : ""}`}>
+          <div className="gallery-initial-view">
             {/* Horizontal grid wrapper */}
             <div className="w-full max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {cards.map((card) => {
-                const isLaunching = overlay?.id === card.id;
-                const circleClass = getEdgeClassFor(card);
                 const imgs = card.images || [];
                 const previewA = imgs[0];
                 const previewB = imgs.length > 1 ? imgs[imgs.length - 1] : undefined;
@@ -520,8 +310,8 @@ const Gallery = () => {
                 return (
                   <ParallaxFolderCard
                     key={card.id}
-                    className={`folder-large ${isLaunching ? "is-launching" : ""} ${circleClass}`}
-                    onClick={(e) => !overlay && handleCardClick(card, e)}
+                    className="folder-large"
+                    onClick={() => handleCardClick(card)}
                     title={card.title}
                     previewA={previewA}
                     previewB={previewB}
@@ -532,35 +322,17 @@ const Gallery = () => {
           </div>
         )}
 
-        {/* Overlay animations (slider is unmounted while overlay runs) */}
-        {overlay && overlay.mode === "train" && (
-          <TrainIntro
-            images={overlay.images}
-            startRect={overlay.rect}
-            onDone={finishOverlay}
-            heroScale={7}
-          />
-        )}
-
-        {overlay && overlay.mode === "scatter" && (
-          <ScatterIntro
-            images={overlay.images}
-            startRect={overlay.rect}
-            onDone={finishOverlay}
-          />
-        )}
-
-        {/* Slider only renders when there is no overlay */}
-        {selectedCardId && selectedCardData && !overlay && (
+        {/* Slider renders immediately, no overlay */}
+        {selectedCardId && selectedCardData && (
           <div className={`gallery-main-view ${transitioning ? "transitioning" : ""} anuj`}>
             <ImageSlider
               images={selectedCardData.images}
-              onExit={() => setSelectedCardId(null)}
-              otherCards={otherCards}
-              onLaunchOther={(id, rect) => {
-                const mode = computeShouldUseTrain() ? "train" : "scatter";
-                triggerOverlayTo(id, rect, mode);
+              onExit={() => {
+                clearHeadLinks();
+                setSelectedCardId(null);
               }}
+              otherCards={otherCards}
+              onLaunchOther={(id) => openCardInstant(id)}
               transitioning={transitioning}
               initialIndex={sliderStartIndex}
             />
