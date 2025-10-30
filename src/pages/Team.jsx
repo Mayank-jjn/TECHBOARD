@@ -128,8 +128,8 @@ function Team() {
           />
           <NewProfileCard
             name="Anuj Kumar Sharma"
-            title="Code-Blooded"
-            description="Chess, CP, Analytical thinking."
+            title="Aspiring FullStack Developer"
+            description="Dev,CP,Freelancer"
             imageUrl="Team/se4.png"
           />
         </div>
@@ -188,6 +188,7 @@ function Team() {
               "Mayank Singh Tomar",
               "Omendra",
               "Pratik Galave",
+              "Ajay Singh tomar",
               "Simran Singh",
               "Nikunj Tangle",
               "Vaibhav",
