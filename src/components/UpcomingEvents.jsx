@@ -82,7 +82,7 @@ const EventCard = ({ event, index }) => {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    setButtonText("Coming Soon");
+    setButtonText("Coming Soon...");
   };
 
   return (
@@ -138,10 +138,11 @@ const EventCard = ({ event, index }) => {
             <motion.button
               onClick={handleButtonClick}
               whileTap={{ scale: 0.95 }}
+              // Added cursor-pointer here
               className="w-full text-white font-semibold text-sm
                 bg-gradient-to-r from-[#3a86ff] to-[#ff006e]
                 px-6 py-3 rounded-full shadow-lg
-                hover:shadow-xl hover:brightness-110 transition-all"
+                hover:shadow-xl hover:brightness-110 transition-all cursor-pointer"
             >
               {buttonText}
             </motion.button>
@@ -154,7 +155,7 @@ const EventCard = ({ event, index }) => {
 
 const UpcomingEvents = () => {
   return (
-    <div className="w-full bg-[#0d0f12] py-20 px-4 relative overflow-hidden">
+    <div className="w-full py-20 px-4 relative overflow-hidden">
       <style>
         {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}
       </style>
