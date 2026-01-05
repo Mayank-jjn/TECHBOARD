@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // Event data
 const events = [
@@ -7,7 +8,7 @@ const events = [
     id: "web3-metaverse",
     displayDate: "OCT 08 2025",
     countdownDate: "2026-02-26T09:00:00",
-    title: "SOLUTION 2K25",
+    title: "SOLUTIONS 2K26",
     location: "AIT PUNE",
     description:
       "Join us at Solutions, Pune’s biggest tech fest with exciting coding, gaming, and tech events!",
@@ -17,247 +18,173 @@ const events = [
     id: "ai-in-design",
     displayDate: "NOV 15 2025",
     countdownDate: "2026-01-22T00:00:00",
-    title: "TECHNICAL AKRITI",
+    title: "TECHNICAL AAKRITI",
     location: "AIT PUNE",
     description:
-      "Join us for Technical Akriti, our college’s exclusive tech event featuring exciting coding, gaming, and innovation challenges!",
+      "Join us for Technical Aakriti, our college’s exclusive tech event featuring exciting coding, gaming, and innovation challenges!",
     imageUrl: "upcomingEvent/tech.png",
   },
 ];
 
-// Countdown timer
+// Countdown Timer Component
 const CountdownTimer = ({ targetDate }) => {
   const calculateTimeLeft = () => {
     const diff = +new Date(targetDate) - +new Date();
     if (diff <= 0) return {};
     return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / 1000 / 60) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
+      d: Math.floor(diff / (1000 * 60 * 60 * 24)),
+      h: Math.floor((diff / (1000 * 60 * 60)) % 24),
+      m: Math.floor((diff / 1000 / 60) % 60),
+      s: Math.floor((diff / 1000) % 60),
     };
   };
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
   useEffect(() => {
-    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  if (!Object.keys(timeLeft).length)
-    return <span className="event-live">Event is Live!</span>;
+  if (!Object.keys(timeLeft).length) {
+    return (
+      <div className="flex justify-center my-3">
+        <span className="text-[#00ff88] font-bold tracking-wider animate-pulse">
+          ● EVENT IS LIVE
+        </span>
+      </div>
+    );
+  }
 
   return (
-    <div className="countdown-timer">
+    <div className="flex justify-center gap-3 my-4">
       {Object.keys(timeLeft).map((key) => (
-        <div key={key}>
-          <span>{String(timeLeft[key]).padStart(2, "0")}</span>
-          <p>{key}</p>
+        <div key={key} className="flex flex-col items-center">
+          <div className="w-10 h-10 bg-[#111] border border-[#3a86ff]/50 rounded-md flex items-center justify-center">
+            <span className="text-lg font-bold text-white font-mono">
+              {String(timeLeft[key]).padStart(2, "0")}
+            </span>
+          </div>
+          <span className="text-[10px] text-gray-400 mt-1 uppercase">
+            {key}
+          </span>
         </div>
       ))}
     </div>
   );
 };
 
+// Event Card Component
+const EventCard = ({ event, index }) => {
+  const [buttonText, setButtonText] = useState("Register");
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    setButtonText("Coming Soon");
+  };
+
+  return (
+    <Link to="#" className="no-underline group relative">
+      {/* Glow */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-[#3a86ff] to-[#ff006e] rounded-[30px] blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: index * 0.2 }}
+        whileHover={{ y: -8, scale: 1.02 }}
+        className="
+          relative bg-gradient-to-br from-[#161920] to-[#0d0f12]
+          border border-[#3a86ff]/30 rounded-[30px]
+          overflow-hidden h-full flex flex-col
+          shadow-[0_0_20px_rgba(58,134,255,0.1)]
+          hover:shadow-[0_0_40px_rgba(58,134,255,0.3)]
+          transition-all duration-300
+        "
+        style={{ fontFamily: "'Poppins', sans-serif" }}
+      >
+        {/* Image */}
+        <div className="relative w-full h-64 overflow-hidden">
+          <motion.img
+            src={event.imageUrl}
+            alt={event.title}
+            className="w-full h-full object-cover"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.6 }}
+          />
+          <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white">
+            {event.location}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 flex flex-col flex-grow">
+          <h3 className="text-2xl font-bold text-white mb-2 tracking-wide group-hover:text-[#3a86ff] transition-colors">
+            {event.title}
+          </h3>
+
+          <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+            {event.description}
+          </p>
+
+          {/* CENTERED TIMER */}
+          <CountdownTimer targetDate={event.countdownDate} />
+
+          {/* Button */}
+          <div className="mt-auto pt-4">
+            <motion.button
+              onClick={handleButtonClick}
+              whileTap={{ scale: 0.95 }}
+              className="w-full text-white font-semibold text-sm
+                bg-gradient-to-r from-[#3a86ff] to-[#ff006e]
+                px-6 py-3 rounded-full shadow-lg
+                hover:shadow-xl hover:brightness-110 transition-all"
+            >
+              {buttonText}
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
+
 const UpcomingEvents = () => {
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap');
+    <div className="w-full bg-[#0d0f12] py-20 px-4 relative overflow-hidden">
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}
+      </style>
 
-        .events-section {
-          font-family: 'Poppins', sans-serif;
-          padding: 100px 5%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          color: #fff;
-        }
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-16"
+      >
+        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4">
+          Upcoming{" "}
+          <span className="bg-gradient-to-r from-[#3a86ff] to-[#00d4ff] bg-clip-text text-transparent">
+            Events
+          </span>
+        </h1>
+        <p className="text-gray-400 max-w-2xl mx-auto">
+          Explore the future of tech. Join us for hackathons, coding battles, and innovation showcases.
+        </p>
+      </motion.div>
 
-        .section-header {
-          text-align: center;
-          margin-bottom: 60px;
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        .section-header h1 {
-          font-size: 3.2rem;
-          font-weight: 700;
-        }
-        .section-header h1 span {
-          color: #64B4FF;
-          font-family: 'Roboto Mono', monospace;
-        }
-
-        .section-header p {
-          font-size: 1rem;
-          color: #a0a0a0;
-          margin-top: 10px;
-        }
-
-        .events-container {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-          gap: 40px;
-          width: 100%;
-          max-width: 1100px;
-        }
-
-        .event-card-link {
-          text-decoration: none;
-        }
-
-        .event-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(100, 180, 255, 0.2);
-          border-radius: 16px;
-          overflow: hidden;
-          transition: transform 0.4s ease, box-shadow 0.4s ease;
-          display: flex;
-          flex-direction: column;
-          cursor: pointer;
-        }
-
-        .event-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(100, 180, 255, 0.2);
-        }
-
-        /* --- IMAGE BOTTOM CROP --- */
-        .card-image-container {
-          width: 100%;
-          height: 260px;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .card-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          position: absolute;
-          bottom: 0; /* Moves image down to show top */
-          transition: transform 0.5s ease;
-        }
-
-        .event-card:hover .card-image {
-          transform: scale(1.08);
-        }
-
-        .card-content {
-          padding: 25px;
-          text-align: center;
-          flex-grow: 1;
-        }
-
-        .event-date {
-          font-family: 'Roboto Mono', monospace;
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #64B4FF;
-          margin-bottom: 15px;
-        }
-
-        .countdown-timer {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          margin-bottom: 20px;
-        }
-        .countdown-timer div {
-          text-align: center;
-          background: rgba(100, 180, 255, 0.1);
-          padding: 8px;
-          border-radius: 8px;
-          min-width: 60px;
-          border: 1px solid rgba(100, 180, 255, 0.2);
-        }
-        .countdown-timer span {
-          font-size: 1.5rem;
-          font-weight: 700;
-        }
-        .countdown-timer p {
-          font-size: 0.7rem;
-          text-transform: uppercase;
-          color: #a0a0a0;
-          margin: 0;
-        }
-        .event-live {
-          font-size: 1rem;
-          font-weight: 700;
-          color: #64B4FF;
-        }
-
-        .event-title {
-          font-size: 1.4rem;
-          font-weight: 600;
-          margin-bottom: 8px;
-          color: #fff;
-        }
-
-        .event-location {
-          font-size: 0.95rem;
-          color: #a0a0a0;
-          margin-bottom: 15px;
-        }
-
-        .event-description {
-          font-size: 0.95rem;
-          line-height: 1.6;
-          color: #ccc;
-        }
-
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 600px) {
-          .card-image-container {
-            height: 220px;
-          }
-          .event-title { font-size: 1.2rem; }
-        }
-      `}</style>
-
-      <section className="events-section">
-        <div className="section-header">
-          <h1>
-            Upcoming <span>Events</span>
-          </h1>
-          <p>
-            Join us for our upcoming events and connect with the tech community.
-          </p>
-        </div>
-
-        <div className="events-container">
-          {events.map((event, index) => (
-            <Link
-              // to={`/event/${event.id}`}
-              key={index}
-              className="event-card-link"
-            >
-              <div className="event-card">
-                <div className="card-image-container">
-                  <img
-                    src={event.imageUrl}
-                    alt={event.title}
-                    className="card-image"
-                  />
-                </div>
-                <div className="card-content">
-                  {/* <p className="event-date">{event.displayDate}</p> */}
-                  <h3 className="event-title">{event.title}</h3>
-                  <CountdownTimer targetDate={event.countdownDate} />
-                  <p className="event-location">{event.location}</p>
-                  <p className="event-description">{event.description}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-    </>
+      {/* Grid */}
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {events.map((event, index) => (
+          <EventCard key={event.id} event={event} index={index} />
+        ))}
+      </div>
+    </div>
   );
 };
 

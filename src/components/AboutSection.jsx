@@ -1,19 +1,38 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; 
-
-
+import { useNavigate } from "react-router-dom";
 
 const AboutSection = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
+  // Animation variants for the floating images (Desktop only)
+  const floatAnimation = (delay) => ({
+    y: [0, -15, 0],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      repeatType: "mirror",
+      ease: "easeInOut",
+      delay: delay,
+    },
+  });
 
   return (
-    <div className="max-w-10/12 mx-auto flex flex-col items-center justify-center px-4 py-10 relative">
+    <div className="max-w-7xl mx-auto flex flex-col items-center justify-center px-4 py-16 relative">
+      {/* Injecting the Google Font locally */}
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap');
+        `}
+      </style>
+
+      {/* --- Main Header --- */}
       <motion.h1
         initial={{ opacity: 0, y: -40 }}
         whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="text-4xl md:text-6xl font-extrabold text-center mb-8 
+        className="text-4xl md:text-6xl font-extrabold text-center mb-10 
         bg-gradient-to-r from-[#3a86ff] via-[#ff9a3c] to-[#ff006e] 
         bg-clip-text text-transparent tracking-wide drop-shadow-lg"
         style={{ fontFamily: "'Poppins', sans-serif" }}
@@ -21,104 +40,99 @@ const AboutSection = () => {
         About Us
       </motion.h1>
 
+      {/* --- Main Content Card --- */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="
-          relative w-full bg-[#1A1D24] text-white rounded-[24px] border-2
-          border-[#3a86ff] shadow-[0_0_25px_#3a86ff] 
-          p-6 mt-6 md:p-8 overflow-hidden
+          relative w-full max-w-6xl bg-[#1A1D24] text-white rounded-[30px] border-2
+          border-[#3a86ff] shadow-[0_0_30px_rgba(58,134,255,0.4)] 
+          p-8 md:p-10 overflow-hidden min-h-[300px] flex items-center justify-center
         "
       >
-
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="absolute -top-2 left-5 md:left-10 z-10 
-            bg-[#3a86ff] text-white py-2 px-4 rounded-lg 
-            text-[0.9rem] font-bold shadow-lg"
-        >
-          <span>What is TechBoard?</span>
-        </motion.div>
-
-
-        <div className="flex flex-col justify-center items-center text-center gap-5 py-6 md:py-10">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-2xl md:text-4xl font-extrabold leading-tight"
-          >
-            Know our Board
-          </motion.h1>
-
-          <motion.h2
-            initial={{ rotate: -10, opacity: 0 }}
-            whileInView={{ rotate: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-3xl md:text-5xl font-extrabold -mt-5 leading-tight"
-          >
-            <span className="inline-block bg-[#ff9a3c] text-[#1A1D24] py-1 px-6 rounded-xl -rotate-2 shadow-lg">
-              We host coding contests, gaming tournaments, hackathons, and
-              technical festivals while representing our college at
-              inter-college and national-level tech events.
-            </span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-sm md:text-base text-gray-300 max-w-md leading-relaxed"
-          ></motion.p>
-          <motion.button
-            onClick={() => navigate("/watch-recap")} 
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 bg-white text-[#1A1D24] rounded-full py-2 px-4 sm:py-3 sm:px-6 text-sm sm:text-base font-bold cursor-pointer transition-transform duration-200 shadow-md"
-          >
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+        {/* Grid Layout: Left Images | Center Text | Right Images */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10 w-full">
+          
+          {/* --- LEFT COLUMN IMAGES (HIDDEN ON MOBILE) --- */}
+          <div className="hidden md:flex flex-col gap-6 w-1/4 items-center">
+            <motion.div
+              animate={floatAnimation(0)}
+              className="w-32 h-32 lg:w-40 lg:h-40 bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700"
             >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                clipRule="evenodd"
-              />
-            </svg>
+              <img src="/home-images/h1.jpg" alt="Event 1" className="w-full h-full object-cover" />
+            </motion.div>
+            <motion.div
+              animate={floatAnimation(1.5)} 
+              className="w-32 h-32 lg:w-40 lg:h-40 bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700"
+            >
+              <img src="/home-images/h3.jpg" alt="Event 2" className="w-full h-full object-cover" />
+            </motion.div>
+          </div>
 
-            <span className="hidden sm:inline">Watch the 2025 Recap</span>
-            <span className="inline sm:hidden">Watch</span>
-          </motion.button>
+          {/* --- CENTER TEXT CONTENT --- */}
+          <div className="flex-1 flex flex-col items-center text-center space-y-8 max-w-2xl mx-auto">
+            
+            {/* FULL TEXT (Visible on all screen sizes) */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-2xl lg:text-3xl font-medium leading-relaxed tracking-wide text-gray-200"
+              style={{ fontFamily: "'Tagesschrift', cursive" }}
+            >
+              We host{" "}
+              <span className="text-[#ff006e]">coding contests</span>,{" "}
+              <span className="text-[#ff006e]">gaming tournaments</span>,{" "}
+              <span className="text-[#ff006e]">hackathons</span>, and{" "}
+              <span className="text-[#ff006e]">technical festivals</span>{" "}
+              while representing our college at national-level tech events.
+            </motion.h2>
+
+            {/* UPDATED WATCH VIDEO BUTTON */}
+            <motion.button
+              onClick={() => navigate("/watch-recap")}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="group flex items-center gap-3 bg-gradient-to-r from-[#3a86ff] to-[#ff006e] text-white rounded-full py-3 px-8 text-base md:text-lg font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-all duration-300"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+            >
+              <div className="bg-white text-[#3a86ff] rounded-full p-1 group-hover:text-[#ff006e] transition-colors">
+                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+              <span>Watch Video</span>
+            </motion.button>
+          </div>
+
+          {/* --- RIGHT COLUMN IMAGES (HIDDEN ON MOBILE) --- */}
+          <div className="hidden md:flex flex-col gap-6 w-1/4 items-center">
+            <motion.div
+              animate={floatAnimation(0.5)} 
+              className="w-32 h-32 lg:w-40 lg:h-40 bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700"
+            >
+              <img src="/home-images/h2.jpg" alt="Event 3" className="w-full h-full object-cover" />
+            </motion.div>
+            <motion.div
+              animate={floatAnimation(2)}
+              className="w-32 h-32 lg:w-40 lg:h-40 bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700"
+            >
+              <img src="/home-images/h4.jpg" alt="Event 4" className="w-full h-full object-cover" />
+            </motion.div>
+          </div>
+
         </div>
 
-        {[
-          { pos: "top-3 left-3", src: "/home-images/h1.jpg" },
-          { pos: "top-3 right-3", src: "/home-images/h2.jpg" },
-          { pos: "bottom-3 left-3", src: "/home-images/h3.jpg" },
-          { pos: "bottom-3 right-3", src: "/home-images/h4.jpg" },
-        ].map((img, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              x: [0, i % 2 === 0 ? 10 : -10, 0],
-              y: [0, i % 2 === 0 ? -10 : 10, 0],
-            }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className={`absolute ${img.pos} w-12 h-12 sm:w-16 sm:h-16 md:w-28 md:h-28 rounded-xl overflow-hidden shadow-lg translate-x-[-20%] translate-y-[-20%] sm:translate-x-0 sm:translate-y-0`}
-          >
-            <img
-              src={img.src}
-              alt="Decorative"
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        ))}
+        {/* --- Background Glow --- */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#3a86ff] opacity-[0.03] blur-[100px] rounded-full"></div>
+        </div>
+
       </motion.div>
     </div>
   );
