@@ -29,15 +29,9 @@ export const RobotSection = ({ sectionTop, sectionHeight }) => {
 
   return (
     <div
-      className="robot-spline-container"
+      className="robot-spline-container absolute z-50 transition-transform duration-200 ease-out left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-12 w-28 sm:w-36 md:w-72 h-28 sm:h-40 md:h-96"
       style={{
-        position: "absolute",
-        top: `${topBuffer + offsetY}px`,  // Use the topBuffer here
-        width: "18vw",                     // Increased width
-        height: "30vh",
-        transform: `translateY(20px)`,
-        transition: "transform 0.2s ease-out",
-        zIndex: 9999,
+        top: `${topBuffer + offsetY + 20}px`, // include small vertical nudge inline so transforms don't clash
       }}
     >
       <Spline
