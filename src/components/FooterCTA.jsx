@@ -14,17 +14,15 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-white mb-2">Secretary Contact</h3>
             <p className="text-sm leading-relaxed mb-2">
-              <span className="font-medium">Secretary:</span> Shashank Tiwari &
-              Sneha
+              <span className="font-medium">Secretary:</span> Ajay Singh Tomar & Simran Singh
             </p>
             <p className="text-sm leading-relaxed mb-2">
-              <span className="font-medium">Mobile:</span> +91 8882465015 , +91
-              6387029949
+              <span className="font-medium">Mobile:</span> +91 6266044118 , +91 7611164130
             </p>
             <p className="text-sm leading-relaxed">
               <span className="font-medium">Official Email:</span>{" "}
               <a
-                href="mailto:techboard.official@gmail.com"
+                href="mailto:technicalboard24@gmail.com"
                 className="text-blue-400 hover:underline"
               >
                 technicalboard@aitpune.edu.in
