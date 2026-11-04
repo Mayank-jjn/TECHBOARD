@@ -215,8 +215,8 @@ const UpcomingEvents = () => {
   return (
     <div className="w-full py-20 px-4 relative overflow-hidden">
       <style>
-        {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}
-      </style>
+    {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap');`}
+    </style>
 
       {/* Header */}
       <motion.div
@@ -226,16 +226,21 @@ const UpcomingEvents = () => {
         transition={{ duration: 0.8 }}
         className="text-center mb-16"
       >
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4">
-          Upcoming{" "}
-          <span className="bg-gradient-to-r from-[#3a86ff] to-[#00d4ff] bg-clip-text text-transparent">
-            Events
-          </span>
-        </h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          Explore the future of tech. Join us for hackathons, coding battles,
-          e-sports tournaments, and innovation showcases.
-        </p>
+      <h1
+      className="text-4xl md:text-6xl font-extrabold mb-2 pb-2 leading-[1.2] bg-clip-text text-transparent"
+       style={{
+        backgroundImage: "linear-gradient(90deg, #8338ec, #ff006e)",
+       }}
+       >
+       Upcoming Events
+       </h1>
+        <p
+  className="text-white-400 max-w-2xl mx-auto font-bold"
+  style={{ fontFamily: "'Rajdhani', sans-serif" }}
+>
+  Explore the future of tech. Join us for hackathons, coding battles,
+  e-sports tournaments, and innovation showcases.
+</p>
       </motion.div>
 
       {/* Grid */}
