@@ -2,29 +2,51 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-// Event data
+// Event data (soonest event first)
 const events = [
   {
-    id: "web3-metaverse",
-    displayDate: "OCT 08 2025",
-    countdownDate: "2026-02-26T09:00:00",
-    title: "SOLUTIONS 2K26",
-    location: "AIT PUNE",
-    description:
-      "Join us at Solutions, Pune’s biggest tech fest with exciting coding, gaming, and tech events!",
-    imageUrl: "upcomingEvent/solution.png",
-  },
-  {
-    id: "ai-in-design",
-    displayDate: "NOV 15 2025",
-    countdownDate: "2026-01-22T00:00:00",
+    id: "technical-aakriti",
+    displayDate: "14 JAN 2K27",
+    countdownDate: "2027-01-14T00:00:00",
     title: "TECHNICAL AAKRITI",
     location: "AIT PUNE",
     description:
-      "Join us for Technical Aakriti, our college’s exclusive tech event featuring exciting coding, gaming, and innovation challenges!",
-    imageUrl: "upcomingEvent/tech.png",
+      "Join us for Technical Aakriti, our college’s exclusive tech event featuring exciting coding, e-sports, and innovation challenges!",
+    imageUrl: "/upcomingEvent/tech.png",
+  },
+  {
+    id: "solutions-2k27",
+    displayDate: "05 MAR 2K27",
+    countdownDate: "2027-03-05T09:00:00",
+    title: "SOLUTIONS 2K27",
+    location: "AIT PUNE",
+    description:
+      "Join us at Solutions, Pune’s biggest tech fest with exciting coding, e-sports, and tech events!",
+    imageUrl: "/upcomingEvent/solution.png",
   },
 ];
+
+// Build a Google Calendar link (all-day event)
+const getCalendarLink = (event) => {
+  const start = new Date(event.countdownDate);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+
+  const fmt = (d) =>
+    `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(
+      d.getDate()
+    ).padStart(2, "0")}`;
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${fmt(start)}/${fmt(end)}`,
+    details: event.description,
+    location: event.location,
+  });
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
 
 // Countdown Timer Component
 const CountdownTimer = ({ targetDate }) => {
@@ -42,6 +64,7 @@ const CountdownTimer = ({ targetDate }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
+    setTimeLeft(calculateTimeLeft());
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
@@ -49,10 +72,16 @@ const CountdownTimer = ({ targetDate }) => {
   }, [targetDate]);
 
   if (!Object.keys(timeLeft).length) {
+    const ended =
+      +new Date() - +new Date(targetDate) > 24 * 60 * 60 * 1000;
     return (
       <div className="flex justify-center my-3">
-        <span className="text-[#00ff88] font-bold tracking-wider animate-pulse">
-          ● EVENT IS LIVE
+        <span
+          className={`font-bold tracking-wider ${
+            ended ? "text-gray-400" : "text-[#00ff88] animate-pulse"
+          }`}
+        >
+          {ended ? "EVENT ENDED" : "● EVENT IS LIVE"}
         </span>
       </div>
     );
@@ -85,6 +114,12 @@ const EventCard = ({ event, index }) => {
     setButtonText("Coming Soon...");
   };
 
+  const handleCalendarClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(getCalendarLink(event), "_blank", "noopener,noreferrer");
+  };
+
   return (
     <Link to="#" className="no-underline group relative">
       {/* Glow */}
@@ -115,9 +150,22 @@ const EventCard = ({ event, index }) => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.6 }}
           />
+
+          {/* Shine sweep effect */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12
+              bg-gradient-to-r from-transparent via-white/30 to-transparent
+              -translate-x-full group-hover:translate-x-[450%]
+              transition-transform duration-1000 ease-in-out"
+          />
+
           <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white">
             {event.location}
           </div>
+          <div className="absolute top-4 right-4 bg-black px-3 py-1 rounded-full text-xs font-semibold text-white">
+          {event.displayDate}
+           </div>
         </div>
 
         {/* Content */}
@@ -126,25 +174,35 @@ const EventCard = ({ event, index }) => {
             {event.title}
           </h3>
 
-          <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+          <p className="text-gray-400 text-sm mb-4 line-clamp-4">
             {event.description}
           </p>
 
           {/* CENTERED TIMER */}
           <CountdownTimer targetDate={event.countdownDate} />
 
-          {/* Button */}
-          <div className="mt-auto pt-4">
+          {/* Buttons */}
+          <div className="mt-auto pt-4 flex flex-col gap-3">
             <motion.button
               onClick={handleButtonClick}
               whileTap={{ scale: 0.95 }}
-              // Added cursor-pointer here
               className="w-full text-white font-semibold text-sm
                 bg-gradient-to-r from-[#3a86ff] to-[#ff006e]
                 px-6 py-3 rounded-full shadow-lg
                 hover:shadow-xl hover:brightness-110 transition-all cursor-pointer"
             >
               {buttonText}
+            </motion.button>
+
+            <motion.button
+              onClick={handleCalendarClick}
+              whileTap={{ scale: 0.95 }}
+              className="w-full text-[#3a86ff] font-semibold text-sm
+                border border-[#3a86ff]/50 bg-transparent
+                px-6 py-2.5 rounded-full
+                hover:bg-[#3a86ff]/10 transition-all cursor-pointer"
+            >
+              + Add to Calendar
             </motion.button>
           </div>
         </div>
@@ -157,8 +215,8 @@ const UpcomingEvents = () => {
   return (
     <div className="w-full py-20 px-4 relative overflow-hidden">
       <style>
-        {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}
-      </style>
+    {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap');`}
+    </style>
 
       {/* Header */}
       <motion.div
@@ -168,15 +226,21 @@ const UpcomingEvents = () => {
         transition={{ duration: 0.8 }}
         className="text-center mb-16"
       >
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4">
-          Upcoming{" "}
-          <span className="bg-gradient-to-r from-[#3a86ff] to-[#00d4ff] bg-clip-text text-transparent">
-            Events
-          </span>
-        </h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          Explore the future of tech. Join us for hackathons, coding battles, and innovation showcases.
-        </p>
+      <h1
+      className="text-4xl md:text-6xl font-extrabold mb-2 pb-2 leading-[1.2] bg-clip-text text-transparent"
+       style={{
+        backgroundImage: "linear-gradient(90deg, #8338ec, #ff006e)",
+       }}
+       >
+       Upcoming Events
+       </h1>
+        <p
+  className="text-white-400 max-w-2xl mx-auto font-bold"
+  style={{ fontFamily: "'Rajdhani', sans-serif" }}
+>
+  Explore the future of tech. Join us for hackathons, coding battles,
+  e-sports tournaments, and innovation showcases.
+</p>
       </motion.div>
 
       {/* Grid */}
